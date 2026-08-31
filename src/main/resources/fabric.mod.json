@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "pvp-gauntlets",
+	"version": "${version}",
+	"name": "PvP Gauntlets",
+	"description": "Makes PvP more than just 'get ambushed and lose everything'. Highly customizable!",
+	"authors": [
+		"ZuccoGio"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/pvp-gauntlets/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"io.github.zuccogio.pvpgauntlets.PvPGauntlets"
+		],
+		"client": [
+			"io.github.zuccogio.pvpgauntlets.client.PvPGauntletsClient"
+		],
+		"fabric-datagen": [
+			"io.github.zuccogio.pvpgauntlets.client.PvPGauntletsDataGenerator"
+		]
+	},
+	"mixins": [
+		"pvp-gauntlets.mixins.json",
+		{
+			"config": "pvp-gauntlets.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
