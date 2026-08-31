@@ -1,5 +1,6 @@
 package io.github.zuccogio.pvpgauntlets;
 
+import io.github.zuccogio.pvpgauntlets.item.ModItems;
 import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.resources.ResourceLocation;
@@ -21,7 +22,7 @@ public class PvPGauntlets implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 
-		LOGGER.info("Hello Fabric world!");
+		ModItems.initialize();
 	}
 
 	public static ResourceLocation id(String path) {
