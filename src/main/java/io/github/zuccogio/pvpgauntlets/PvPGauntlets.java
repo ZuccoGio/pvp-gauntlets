@@ -2,9 +2,7 @@ package io.github.zuccogio.pvpgauntlets;
 
 import io.github.zuccogio.pvpgauntlets.item.ModItems;
 import net.fabricmc.api.ModInitializer;
-
-import net.minecraft.resources.ResourceLocation;
-
+import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +23,7 @@ public class PvPGauntlets implements ModInitializer {
 		ModItems.initialize();
 	}
 
-	public static ResourceLocation id(String path) {
-		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+	public static Identifier id(String path) {
+		return Identifier.of(MOD_ID, path);
 	}
 }
