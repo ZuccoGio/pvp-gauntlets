@@ -1,3 +1,18 @@
 {
-  "item.pvp-gauntlets.gauntlet": "Gauntlet"
+  "item.pvp-gauntlets.gauntlet": "Gauntlet",
+
+  "gamerule.category.pvp-gauntlets.my_category": "PvP Gauntlets",
+
+  "gamerule.nonTruePvPDamageReduction": "Damage Reduction Outside Of True PvP",
+  "gamerule.nonTruePvPDamageReduction.description": "How much damage is reduced between two players not in a duel (as a percentage). 1 removes all damage, 0 disables damage reduction.",
+  "gamerule.standoffTimerDuration": "Standoff Duration",
+  "gamerule.standoffTimerDuration.description": "How long the standoff is before the duel should last (in seconds).",
+  "gamerule.timeBeforeDisengage": "Time Without Damage To Disengage",
+  "gamerule.timeBeforeDisengage.description": "How long until the duel ends because players didn't take damage",
+  "gamerule.timeBeforeDisengagePlayer": "Time Without Player Damage To Disengage",
+  "gamerule.timeBeforeDisengagePlayer.description": "How long until the duel ends because players didn't take damage from the opponent",
+  "gamerule.doConsumeGauntlets": "Consume Gauntlets On Use",
+  "gamerule.doConsumeGauntlets.description": "If true, gauntlets will be consumed when used to start a duel. If false, gauntlets will not be consumed.",
+  "gamerule.doGauntletsHeal": "Gauntlets Heal Players",
+  "gamerule.doGauntletsHeal.description": "If true, gauntlets will heal players fully when used to start a duel. If false, gauntlets will not heal players."
 }
