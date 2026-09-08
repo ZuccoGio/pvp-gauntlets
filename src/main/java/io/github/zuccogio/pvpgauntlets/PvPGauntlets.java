@@ -39,37 +39,31 @@ public class PvPGauntlets implements ModInitializer {
 			Identifier.of(MOD_ID, "my_category"),
 			Text.translatable("gamerule.category." + MOD_ID + ".my_category")
 	);
-
 	public static final GameRules.Key<DoubleRule> DAMAGE_REDUCTION = GameRuleRegistry.register(
 			"nonTruePvPDamageReduction",
 			MY_CUSTOM_CATEGORY,
 			GameRuleFactory.createDoubleRule(0.8, 0.0, 1)
 	);
-
 	public static final GameRules.Key<GameRules.IntRule> STANDOFF_TIMER = GameRuleRegistry.register(
 			"standoffTimerDuration",
 			MY_CUSTOM_CATEGORY,
 			GameRuleFactory.createIntRule(10,0,7200)
 	);
-
 	public static final GameRules.Key<GameRules.IntRule> NO_DAMAGE_TIMER = GameRuleRegistry.register(
 			"timeBeforeDisengage",
 			MY_CUSTOM_CATEGORY,
 			GameRuleFactory.createIntRule(60,0,7200)
 	);
-
 	public static final GameRules.Key<GameRules.IntRule> NO_PLAYER_DAMAGE_TIMER = GameRuleRegistry.register(
 			"timeBeforeDisengagePlayer",
 			MY_CUSTOM_CATEGORY,
 			GameRuleFactory.createIntRule(120,0,7200)
 	);
-
 	public static final GameRules.Key<GameRules.BooleanRule> DO_CONSUME_GAUNTLETS = GameRuleRegistry.register(
 			"doConsumeGauntlets",
 			MY_CUSTOM_CATEGORY,
 			GameRuleFactory.createBooleanRule(true)
 	);
-
 	public static final GameRules.Key<GameRules.BooleanRule> DO_GAUNTLETS_HEAL = GameRuleRegistry.register(
 			"doGauntletsHeal",
 			MY_CUSTOM_CATEGORY,
