@@ -4,14 +4,19 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.server.MinecraftServer;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServerDuelComponent implements DuelComponent {
+public class ScoreboardDuelComponent implements DuelComponent {
     private final List<Duel> duels;
+    private final Scoreboard provider;
 
-    public ServerDuelComponent() {
+    public ScoreboardDuelComponent(Scoreboard provider, @Nullable MinecraftServer server) {
+        this.provider = provider;
         this.duels = new ArrayList<>();
     }
 

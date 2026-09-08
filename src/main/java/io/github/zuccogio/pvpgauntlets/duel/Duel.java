@@ -8,9 +8,9 @@ import java.util.UUID;
 
 public class Duel {
 
-    private UUID p1, p2;
-    private DuelState duelState = DuelState.STANDOFF;
-    private DuelType duelType = DuelType.STANDARD;
+    private final UUID p1, p2;
+    private DuelState duelState/* = DuelState.STANDOFF*/;
+    private final DuelType duelType/* = DuelType.STANDARD*/;
     private int standoffTimerTicks;
     private int noDamageTimerTicks;
     private int noPlayerDamageTimerTicks;
