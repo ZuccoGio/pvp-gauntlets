@@ -1,5 +1,7 @@
 package io.github.zuccogio.pvpgauntlets;
 
+import io.github.zuccogio.pvpgauntlets.duel.DuelComponent;
+import io.github.zuccogio.pvpgauntlets.duel.ScoreboardDuelComponent;
 import io.github.zuccogio.pvpgauntlets.item.ModItems;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.gamerule.v1.CustomGameRuleCategory;
@@ -9,6 +11,8 @@ import net.fabricmc.fabric.api.gamerule.v1.rule.DoubleRule;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.GameRules;
+import org.ladysnake.cca.api.v3.component.ComponentKey;
+import org.ladysnake.cca.api.v3.component.ComponentRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,5 +72,11 @@ public class PvPGauntlets implements ModInitializer {
 			"doGauntletsHeal",
 			MY_CUSTOM_CATEGORY,
 			GameRuleFactory.createBooleanRule(true)
+	);
+
+	// Components
+	public static final ComponentKey<ScoreboardDuelComponent> DUELS_COMPONENT = ComponentRegistry.getOrCreate(
+			Identifier.of(MOD_ID, "duels_component"),
+			ScoreboardDuelComponent.class
 	);
 }
