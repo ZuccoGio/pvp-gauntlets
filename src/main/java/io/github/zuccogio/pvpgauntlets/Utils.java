@@ -1,5 +1,14 @@
 package io.github.zuccogio.pvpgauntlets;
 
+import io.github.zuccogio.pvpgauntlets.duel.Duel;
+import io.github.zuccogio.pvpgauntlets.duel.ScoreboardDuelComponent;
+import net.minecraft.scoreboard.Scoreboard;
+
+import java.util.List;
+import java.util.UUID;
+
+import static io.github.zuccogio.pvpgauntlets.PvPGauntlets.DUELS_COMPONENT;
+
 public class Utils {
     /**
      * Calculates the required regeneration level based on the given health and duration in ticks.
@@ -33,5 +42,16 @@ public class Utils {
         } else {
             return 6; // Level 6 or higher
         }
+    }
+
+    public static boolean existsDuel(List<Duel> duels, UUID playerA, UUID playerB) {
+        if (duels == null || playerA == null || playerB == null) {
+            return false;
+        }
+
+        return duels.stream().anyMatch(duel ->
+            (playerA.equals(duel.getP1()) && playerB.equals(duel.getP2())) ||
+            (playerB.equals(duel.getP1()) && playerA.equals(duel.getP2()))
+        );
     }
 }

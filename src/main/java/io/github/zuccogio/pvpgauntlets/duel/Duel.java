@@ -124,4 +124,12 @@ public class Duel {
         }
         return new Duel(p1, p2, duelState, duelType, standoffTimerTicks, noDamageTimerTicks, noPlayerDamageTimerTicks, cage);
     }
+
+    public UUID getP1() {
+        return p1;
+    }
+
+    public UUID getP2() {
+        return p2;
+    }
 }
