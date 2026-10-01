@@ -10,25 +10,18 @@ import net.minecraft.util.math.Vec3d;
 
 public class Utils {
     /**
-     * Calculates the required regeneration level based on the given health and duration in ticks.
-     *
-     * @param health        The amount of health to be regenerated.
-     * @param durationTicks The duration in ticks over which the health should be regenerated.
-     * @return The required regeneration level (1-6).
-     */
-    /**
      * Calculates the minimum Regeneration level required to restore
      * the given amount of health within the specified duration.
-     *
+     * <p>
      * Regeneration restores 1 health point (half a heart) per activation.
-     *
-     * Level -> ticks per health point
-     * 1     -> 50
-     * 2     -> 25
-     * 3     -> 12
-     * 4     -> 6
-     * 5     -> 3
-     * 6+    -> 1
+     * <p>
+     * Level -> ticks per health point<br>
+     * 1     -> 50<br>
+     * 2     -> 25<br>
+     * 3     -> 12<br>
+     * 4     -> 6<br>
+     * 5     -> 3<br>
+     * 6+    -> 1<br>
      *
      * @param health        Amount of health to regenerate (1 = half a heart).
      * @param durationTicks Duration of the effect in ticks.
