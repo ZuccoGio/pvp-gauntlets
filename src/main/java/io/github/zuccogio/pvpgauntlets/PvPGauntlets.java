@@ -1,13 +1,26 @@
 package io.github.zuccogio.pvpgauntlets;
 
-import io.github.zuccogio.pvpgauntlets.duel.DuelComponent;
 import io.github.zuccogio.pvpgauntlets.duel.ScoreboardDuelComponent;
 import io.github.zuccogio.pvpgauntlets.item.ModItems;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.gamerule.v1.CustomGameRuleCategory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.gamerule.v1.rule.DoubleRule;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.minecraft.component.EnchantmentEffectComponentTypes;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.ExperienceOrbEntity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.GameRules;
@@ -31,6 +44,65 @@ public class PvPGauntlets implements ModInitializer {
 		// Proceed with mild caution.
 
 		ModItems.initialize();
+
+		registerEvents();
+	}
+
+	private static void registerEvents() {
+		ServerLivingEntityEvents.ALLOW_DAMAGE.register(
+				(entity, source, amount) -> {
+					if(entity.getWorld().isClient || !(entity instanceof PlayerEntity player)) {
+						return true;
+					}
+					Scoreboard scoreboard = player.getScoreboard();
+					ScoreboardDuelComponent duelComponent = DUELS_COMPONENT.get(scoreboard);
+
+					return !duelComponent.isInLooting(player.getUuid());
+				}
+		);
+
+		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+			Scoreboard scoreboard = server.getScoreboard();
+			ScoreboardDuelComponent duelComponent = DUELS_COMPONENT.get(scoreboard);
+			duelComponent.clear();
+		});
+
+		ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
+			if (!server.isRunning()) {
+				return;
+			}
+
+			PlayerEntity player = handler.player;
+			Scoreboard scoreboard = server.getScoreboard();
+			ScoreboardDuelComponent duelComponent = DUELS_COMPONENT.get(scoreboard);
+
+			if(duelComponent.isInDuel(player.getUuid())) {
+				duelComponent.disengageAllDuels(player.getUuid());
+
+				dropAll(player);
+				player.setHealth(0.0F);
+				DamageSource damageSource = Utils.createDamageSource((ServerWorld) player.getWorld(), DUEL_ABANDON);
+				player.onDeath(damageSource);
+			}
+		});
+	}
+
+	private static void dropAll(PlayerEntity player) {
+		ExperienceOrbEntity.spawn((ServerWorld) player.getWorld(), player.getPos(), player.getXpToDrop((ServerWorld) player.getWorld(), null));
+		player.experienceLevel = 0;
+		player.totalExperience = 0;
+		player.experienceProgress = 0.0F;
+		vanishCursedItems(player);
+		player.getInventory().dropAll();
+	}
+
+	private static void vanishCursedItems(PlayerEntity player) {
+		for(int i = 0; i < player.getInventory().size(); ++i) {
+			ItemStack itemStack = player.getInventory().getStack(i);
+			if (!itemStack.isEmpty() && EnchantmentHelper.hasAnyEnchantmentsWith(itemStack, EnchantmentEffectComponentTypes.PREVENT_EQUIPMENT_DROP)) {
+				player.getInventory().removeStack(i);
+			}
+		}
 	}
 
 	// Items
@@ -79,4 +151,11 @@ public class PvPGauntlets implements ModInitializer {
 			Identifier.of(MOD_ID, "duels_component"),
 			ScoreboardDuelComponent.class
 	);
+
+	// Damage types
+	public static final RegistryKey<DamageType> DUEL_ABANDON =
+			RegistryKey.of(
+					RegistryKeys.DAMAGE_TYPE,
+					Identifier.of(MOD_ID, "duel_abandon")
+			);
 }

@@ -3,7 +3,12 @@
   "package": "io.github.zuccogio.pvpgauntlets.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "PlayerEntityDamageMixin"
+    "ExperienceOrbEntityMixin",
+    "ItemEntityMixin",
+    "PlayerEntityMixin",
+    "ServerPlayerEntityAccessor",
+    "ServerPlayerEntityMixin",
+    "ServerPlayNetworkHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

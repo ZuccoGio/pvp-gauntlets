@@ -28,7 +28,7 @@ public class ModItems {
     }
 
     public static final Item GAUNTLET = register(
-            new Item(new Item.Settings()),
+            new GauntletItem(new Item.Settings()),
             "gauntlet"
     );
 }
