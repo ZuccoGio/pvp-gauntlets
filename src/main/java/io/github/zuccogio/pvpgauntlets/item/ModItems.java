@@ -14,10 +14,7 @@ public class ModItems {
         Identifier itemID = Identifier.of(PvPGauntlets.MOD_ID, id);
 
         // Register the item.
-        Item registeredItem = Registry.register(Registries.ITEM, itemID, item);
-
-        // Return the registered item!
-        return registeredItem;
+        return Registry.register(Registries.ITEM, itemID, item);
     }
 
     public static void initialize() {
