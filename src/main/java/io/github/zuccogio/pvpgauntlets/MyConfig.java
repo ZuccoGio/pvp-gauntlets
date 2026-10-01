@@ -1,9 +1,7 @@
 package io.github.zuccogio.pvpgauntlets;
 
 import me.fzzyhmstrs.fzzy_config.config.Config;
-import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedDouble;
 import net.minecraft.util.Identifier;
-import me.fzzyhmstrs.fzzy_config.annotations.Comment;
 
 import static io.github.zuccogio.pvpgauntlets.PvPGauntlets.MOD_ID;
 

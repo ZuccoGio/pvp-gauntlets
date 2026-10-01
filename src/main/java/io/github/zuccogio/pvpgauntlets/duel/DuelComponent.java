@@ -1,9 +1,6 @@
 package io.github.zuccogio.pvpgauntlets.duel;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.MinecraftServer;
 import org.ladysnake.cca.api.v3.component.Component;
-import org.ladysnake.cca.api.v3.component.tick.ServerTickingComponent;
 
 import java.util.Set;
 import java.util.UUID;

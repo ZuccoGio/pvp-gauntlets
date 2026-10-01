@@ -1,16 +1,10 @@
 package io.github.zuccogio.pvpgauntlets.duel;
 
 import io.github.zuccogio.pvpgauntlets.PvPGauntlets;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.text.Text;
 
 import java.util.UUID;
-
-import static io.github.zuccogio.pvpgauntlets.PvPGauntlets.LOGGER;
 
 public class Duel {
 
@@ -74,12 +68,10 @@ public class Duel {
                     disengage();
                 }
             }
-//            case LOOTING -> {
-//            }
         }
     }
 
-    private void hit(MinecraftServer server) {
+    private void hit(MinecraftServer server) { // To-do: implement this method to handle when a player hits another player during the duel
         if (this.duelState == DuelState.FIGHTING) {
             this.noDamageTimerTicks = server.getGameRules().getInt(PvPGauntlets.NO_DAMAGE_TIMER) * 20;
             this.noPlayerDamageTimerTicks = server.getGameRules().getInt(PvPGauntlets.NO_PLAYER_DAMAGE_TIMER) * 20;
