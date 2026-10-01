@@ -12,12 +12,10 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-
-import java.util.Set;
 
 import static io.github.zuccogio.pvpgauntlets.PvPGauntlets.DUELS_COMPONENT;
 
@@ -29,10 +27,8 @@ public class GauntletItem extends Item {
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
 
-        // This is to prevent desync.
-        // ||
         // Effect should only trigger between players
-        if(attacker != null && !attacker.getWorld().isClient && attacker instanceof PlayerEntity p1 && target instanceof PlayerEntity p2)
+        if(attacker instanceof ServerPlayerEntity p1 && target instanceof ServerPlayerEntity p2)
         {
             MinecraftServer server = p1.getServer();
             if(server == null)
@@ -52,8 +48,12 @@ public class GauntletItem extends Item {
         return true;
     }
 
-    private static void createDuel(PlayerEntity p1, PlayerEntity p2, ScoreboardDuelComponent duelComponent, MinecraftServer server) {
+    private static void createDuel(ServerPlayerEntity p1, ServerPlayerEntity p2, ScoreboardDuelComponent duelComponent, MinecraftServer server) {
         Duel duel = new Duel(duelComponent, p1.getUuid(), p2.getUuid(), DuelState.STANDOFF, DuelType.STANDARD, server);
+        if (p1.currentScreenHandler instanceof GenericContainerScreenHandler handler && handler.getInventory() == p1.getEnderChestInventory())
+            p1.closeHandledScreen();
+        if (p2.currentScreenHandler instanceof GenericContainerScreenHandler handler && handler.getInventory() == p2.getEnderChestInventory())
+            p2.closeHandledScreen();
         // To-do: add duel to custom HUD
         duelComponent.addDuel(duel);
     }

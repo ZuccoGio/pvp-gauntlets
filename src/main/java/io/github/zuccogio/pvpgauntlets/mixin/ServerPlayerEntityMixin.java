@@ -3,16 +3,16 @@ package io.github.zuccogio.pvpgauntlets.mixin;
 import io.github.zuccogio.pvpgauntlets.Utils;
 import io.github.zuccogio.pvpgauntlets.duel.*;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
-import org.slf4j.Logger;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.text.TranslatableTextContent;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.OptionalInt;
 import java.util.Set;
 
 import static io.github.zuccogio.pvpgauntlets.PvPGauntlets.DUELS_COMPONENT;
@@ -23,10 +23,6 @@ import static io.github.zuccogio.pvpgauntlets.PvPGauntlets.DUELS_COMPONENT;
  */
 @Mixin(ServerPlayerEntity.class)
 public class ServerPlayerEntityMixin {
-	@Shadow
-	@Final
-	private static Logger LOGGER;
-
 	@Inject(
 			method = "onDeath",
 			at = @At("HEAD"),
@@ -64,5 +60,31 @@ public class ServerPlayerEntityMixin {
 		}
 
 		ci.cancel();
+	}
+
+	@Inject(
+			method = "openHandledScreen",
+			at = @At("HEAD"),
+			cancellable = true
+	)
+	private void disableEnderChest(
+			NamedScreenHandlerFactory factory, CallbackInfoReturnable<OptionalInt> cir
+	) {
+		if (factory == null) {
+			return;
+		}
+
+		ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
+
+		ScoreboardDuelComponent duelComponent = DUELS_COMPONENT.get(player.getScoreboard());
+		if (!duelComponent.isInDuelExceptLooting(player.getUuid())) {
+			return;
+		}
+
+		if (factory.getDisplayName().getContent() instanceof TranslatableTextContent text
+				&& text.getKey().equals("container.enderchest")) {
+
+			cir.setReturnValue(OptionalInt.empty());
+		}
 	}
 }

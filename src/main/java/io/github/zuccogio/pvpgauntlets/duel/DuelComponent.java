@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public interface DuelComponent extends Component {
+    @SuppressWarnings("unused")
     Set<Duel> getDuels();
     Set<Duel> getDuels(UUID player);
     Duel getDuel(UUID playerA, UUID playerB);
@@ -14,4 +15,5 @@ public interface DuelComponent extends Component {
     void disengageAllDuels(UUID player);
     boolean isInDuel(UUID uuid);
     boolean isInLooting(UUID player);
+    boolean isInDuelExceptLooting(UUID uuid);
 }

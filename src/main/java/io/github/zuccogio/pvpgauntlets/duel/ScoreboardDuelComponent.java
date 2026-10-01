@@ -20,11 +20,9 @@ import static io.github.zuccogio.pvpgauntlets.PvPGauntlets.LOGGER;
 public class ScoreboardDuelComponent implements DuelComponent, ServerTickingComponent {
     private final Set<Duel> duels;
     private final Map<UUID, lootingPlayerInfo> playersInLooting;
-    private final Scoreboard provider;
     private final MinecraftServer server;
 
-    public ScoreboardDuelComponent(Scoreboard provider, @Nullable MinecraftServer server) {
-        this.provider = provider;
+    public ScoreboardDuelComponent(Scoreboard ignoredProvider, @Nullable MinecraftServer server) {
         this.duels = new LinkedHashSet<>();
         this.playersInLooting = new HashMap<>();
         this.server = server;
@@ -170,5 +168,9 @@ public class ScoreboardDuelComponent implements DuelComponent, ServerTickingComp
 
     public boolean isInDuel(UUID uuid) {
         return duels.stream().anyMatch(duel -> duel.getP1().equals(uuid) || duel.getP2().equals(uuid));
+    }
+
+    public boolean isInDuelExceptLooting(UUID uuid) {
+        return duels.stream().anyMatch(duel -> (duel.getP1().equals(uuid) || duel.getP2().equals(uuid)) && duel.getDuelState() != DuelState.LOOTING);
     }
 }
