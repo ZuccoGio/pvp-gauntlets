@@ -106,6 +106,7 @@ public class PvPGauntlets implements ModInitializer {
 	}
 
 	// Items
+	@SuppressWarnings("unused")
 	public static Identifier id(String path) {
 		return Identifier.of(MOD_ID, path);
 	}
