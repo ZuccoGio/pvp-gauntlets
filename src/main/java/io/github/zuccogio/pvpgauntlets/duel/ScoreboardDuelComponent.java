@@ -1,10 +1,10 @@
 package io.github.zuccogio.pvpgauntlets.duel;
 
 import io.github.zuccogio.pvpgauntlets.mixin.ServerPlayerEntityAccessor;
+import io.github.zuccogio.pvpgauntlets.network.DuelHudSyncPayload;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.network.packet.s2c.play.GameStateChangeS2CPacket;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.server.MinecraftServer;
@@ -12,6 +12,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.TeleportTarget;
 import org.jetbrains.annotations.Nullable;
 import org.ladysnake.cca.api.v3.component.tick.ServerTickingComponent;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import java.util.*;
 
@@ -21,6 +22,8 @@ public class ScoreboardDuelComponent implements DuelComponent, ServerTickingComp
     private final Set<Duel> duels;
     private final Map<UUID, lootingPlayerInfo> playersInLooting;
     private final MinecraftServer server;
+
+    private int hudSyncTimer;
 
     public ScoreboardDuelComponent(Scoreboard ignoredProvider, @Nullable MinecraftServer server) {
         this.duels = new LinkedHashSet<>();
@@ -79,14 +82,31 @@ public class ScoreboardDuelComponent implements DuelComponent, ServerTickingComp
 
     public void addDuel(Duel duel) {
         duels.add(duel);
+        syncHudForDuel(duel);
     }
 
     public void removeDuel(Duel duel) {
+        UUID p1 = duel.getP1();
+        UUID p2 = duel.getP2();
+
         duels.remove(duel);
+
+        syncHud(p1);
+        syncHud(p2);
     }
 
     public void enterLooting(UUID player, lootingPlayerInfo lootingPlayerInfo) {
         playersInLooting.put(player, lootingPlayerInfo);
+
+        syncHud(player);
+
+        for (Duel duel : getDuels(player)) {
+            UUID opponent = duel.getP1().equals(player)
+                    ? duel.getP2()
+                    : duel.getP1();
+
+            syncHud(opponent);
+        }
     }
 
     // ONLY USE IN SERVER TICK, THIS REQUIRES THE SERVER TO BE NON-NULL
@@ -95,6 +115,7 @@ public class ScoreboardDuelComponent implements DuelComponent, ServerTickingComp
         playersInLooting.remove(player);
         for(Duel duel : getDuels(player)) {
             duels.remove(duel);
+            syncHudForDuel(duel);
         }
 
         ServerPlayerEntity serverPlayerEntity = server.getPlayerManager().getPlayer(player);
@@ -136,6 +157,27 @@ public class ScoreboardDuelComponent implements DuelComponent, ServerTickingComp
                 exitLooting(entry.getKey());
             }
         }
+
+        tickSyncHud();
+    }
+
+    private void tickSyncHud() {
+        hudSyncTimer++;
+
+        if (hudSyncTimer >= 20) {
+            hudSyncTimer = 0;
+
+            Set<UUID> playersToSync = new HashSet<>();
+
+            for (Duel duel : duels) {
+                playersToSync.add(duel.getP1());
+                playersToSync.add(duel.getP2());
+            }
+
+            for (UUID playerUuid : playersToSync) {
+                syncHud(playerUuid);
+            }
+        }
     }
 
     /**
@@ -161,5 +203,106 @@ public class ScoreboardDuelComponent implements DuelComponent, ServerTickingComp
 
     public boolean isInDuelExceptLooting(UUID uuid) {
         return duels.stream().anyMatch(duel -> (duel.getP1().equals(uuid) || duel.getP2().equals(uuid)) && duel.getDuelState() != DuelState.LOOTING);
+    }
+
+    private static int ticksToSeconds(int ticks) {
+        return Math.max(0, (ticks + 19) / 20);
+    }
+
+    public void syncHud(UUID playerUuid) {
+        if (server == null) {
+            return;
+        }
+
+        ServerPlayerEntity player =
+                server.getPlayerManager().getPlayer(playerUuid);
+
+        if (player == null) {
+            return;
+        }
+
+        if (!ServerPlayNetworking.canSend(player, DuelHudSyncPayload.ID)) {
+            return;
+        }
+
+        if (isInLooting(playerUuid)) {
+            ServerPlayNetworking.send(
+                    player,
+                    new DuelHudSyncPayload(List.of())
+            );
+            return;
+        }
+
+        List<DuelHudSyncPayload.Entry> entries = new ArrayList<>();
+
+        for (Duel duel : duels) {
+            boolean isP1 = duel.getP1().equals(playerUuid);
+            boolean isP2 = duel.getP2().equals(playerUuid);
+
+            if (!isP1 && !isP2) {
+                continue;
+            }
+
+            UUID opponentUuid = isP1
+                    ? duel.getP2()
+                    : duel.getP1();
+
+            switch (duel.getDuelState()) {
+                case STANDOFF -> entries.add(
+                        new DuelHudSyncPayload.Entry(
+                                opponentUuid,
+                                DuelHudSyncPayload.State.STARTING,
+                                ticksToSeconds(duel.getStandoffTimerTicks())
+                        )
+                );
+
+                case FIGHTING -> entries.add(
+                        new DuelHudSyncPayload.Entry(
+                                opponentUuid,
+                                DuelHudSyncPayload.State.FIGHTING,
+                                ticksToSeconds(duel.getDisengageTimerTicks())
+                        )
+                );
+
+                case LOOTING -> {
+                    /*
+                     * In startLooting() fai in modo che:
+                     *
+                     * p1 = loser
+                     * p2 = winner
+                     *
+                     * Quindi soltanto p2 deve vedere "Victory!".
+                     */
+                    if (!duel.getP2().equals(playerUuid)) {
+                        continue;
+                    }
+
+                    lootingPlayerInfo info =
+                            playersInLooting.get(duel.getP1());
+
+                    if (info == null) {
+                        continue;
+                    }
+
+                    entries.add(
+                            new DuelHudSyncPayload.Entry(
+                                    opponentUuid,
+                                    DuelHudSyncPayload.State.VICTORY,
+                                    ticksToSeconds(info.getLootingTimerTicks())
+                            )
+                    );
+                }
+            }
+        }
+
+        ServerPlayNetworking.send(
+                player,
+                new DuelHudSyncPayload(entries)
+        );
+    }
+
+    public void syncHudForDuel(Duel duel) {
+        syncHud(duel.getP1());
+        syncHud(duel.getP2());
     }
 }

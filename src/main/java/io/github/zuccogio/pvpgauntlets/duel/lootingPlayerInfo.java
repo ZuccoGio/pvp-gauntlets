@@ -33,4 +33,6 @@ public class lootingPlayerInfo {
     public float getPitch() {
         return pitch;
     }
+
+    public int getLootingTimerTicks() { return lootingTimerTicks; }
 }

@@ -83,11 +83,11 @@ public class Duel {
 
     private void startFight() {
         this.duelState = DuelState.FIGHTING;
+        sdc.syncHudForDuel(this);
     }
 
     public void disengage() {
         removeCage();
-        // To-do: remove duel from custom HUD
 
         sdc.removeDuel(this);
     }
@@ -162,5 +162,13 @@ public class Duel {
 
     public DuelType getDuelType() {
         return duelType;
+    }
+
+    public int getStandoffTimerTicks() {
+        return standoffTimerTicks;
+    }
+
+    public int getDisengageTimerTicks() {
+        return Math.min(noDamageTimerTicks, noPlayerDamageTimerTicks);
     }
 }

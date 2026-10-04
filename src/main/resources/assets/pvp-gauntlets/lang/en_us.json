@@ -22,5 +22,10 @@
   "pvpgauntlets.duel.abandoned.error": "%s abandoned a duel, but the other player isn't online. This is likely a bug, please report it to the mod author.",
 
   "actionbar.pvpgauntlets.duel.start": "Duel started with %s",
-  "actionbar.pvpgauntlets.duel.alreadyInDuel": "You are already in a duel with this player!"
+  "actionbar.pvpgauntlets.duel.alreadyInDuel": "You are already in a duel with this player!",
+
+  "hud.pvpgauntlets.duel.starting": "Starting in %1$s...",
+  "hud.pvpgauntlets.duel.fighting": "FIGHT! %1$s",
+  "hud.pvpgauntlets.duel.victory": "Victory! %1$s seconds left to loot",
+  "hud.pvpgauntlets.duel.looting": "Looting..."
 }

@@ -2,6 +2,7 @@ package io.github.zuccogio.pvpgauntlets;
 
 import io.github.zuccogio.pvpgauntlets.duel.ScoreboardDuelComponent;
 import io.github.zuccogio.pvpgauntlets.item.ModItems;
+import io.github.zuccogio.pvpgauntlets.network.DuelHudSyncPayload;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -9,6 +10,7 @@ import net.fabricmc.fabric.api.gamerule.v1.CustomGameRuleCategory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.gamerule.v1.rule.DoubleRule;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.component.EnchantmentEffectComponentTypes;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -39,12 +41,12 @@ public class PvPGauntlets implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
+		PayloadTypeRegistry.playS2C().register(
+				DuelHudSyncPayload.ID,
+				DuelHudSyncPayload.CODEC
+		);
 
 		ModItems.initialize();
-
 		registerEvents();
 	}
 
