@@ -70,8 +70,12 @@ public class PlayerEntityMixin {
 			return;
 		}
 
-		Scoreboard scoreboard = attacker.getScoreboard();
-		ScoreboardDuelComponent duelComponent = DUELS_COMPONENT.get(scoreboard);
+		ScoreboardDuelComponent duelComponent = DUELS_COMPONENT.get(attacker.getScoreboard());
+
+		for(Duel duel : duelComponent.getDuels(targetPlayer.getUuid())) {
+			duel.hit(target.getServer(), attacker);
+		}
+
 		Duel duel = duelComponent.getDuel(targetPlayer.getUuid(), attacker.getUuid());
 
 		if (duel != null && duel.getDuelState() == DuelState.STANDOFF) {

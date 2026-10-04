@@ -1,6 +1,8 @@
 package io.github.zuccogio.pvpgauntlets.duel;
 
 import io.github.zuccogio.pvpgauntlets.PvPGauntlets;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 
@@ -71,10 +73,11 @@ public class Duel {
         }
     }
 
-    private void hit(MinecraftServer server) { // To-do: implement this method to handle when a player hits another player during the duel
+    public void hit(MinecraftServer server, Entity attacker) {
         if (this.duelState == DuelState.FIGHTING) {
             this.noDamageTimerTicks = server.getGameRules().getInt(PvPGauntlets.NO_DAMAGE_TIMER) * 20;
-            this.noPlayerDamageTimerTicks = server.getGameRules().getInt(PvPGauntlets.NO_PLAYER_DAMAGE_TIMER) * 20;
+            if(attacker instanceof PlayerEntity && (attacker.getUuid().equals(p1) || attacker.getUuid().equals(p2)))
+                this.noPlayerDamageTimerTicks = server.getGameRules().getInt(PvPGauntlets.NO_PLAYER_DAMAGE_TIMER) * 20;
         }
     }
 
