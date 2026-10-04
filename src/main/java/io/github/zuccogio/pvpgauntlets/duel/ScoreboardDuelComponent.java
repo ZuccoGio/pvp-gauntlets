@@ -112,7 +112,7 @@ public class ScoreboardDuelComponent implements DuelComponent, ServerTickingComp
             ((ServerPlayerEntityAccessor) serverPlayerEntity).setJoinInvulnerabilityTicks(60);
             // Possibilmente aggiungere un effetto che impedisce di essere sfidati per 5 minuti
         }
-        else LOGGER.error("Player {}'s respawnTarget is null. Report this to the mod author", player);
+        else LOGGER.error("Player {}'s respawnTarget is null. Report this to the mod developer", player);
     }
 
     public boolean isInLooting(UUID player) {
