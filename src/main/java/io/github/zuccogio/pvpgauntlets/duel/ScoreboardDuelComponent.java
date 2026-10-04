@@ -105,18 +105,6 @@ public class ScoreboardDuelComponent implements DuelComponent, ServerTickingComp
 
         TeleportTarget teleportTarget = serverPlayerEntity.getRespawnTarget(false, TeleportTarget.NO_OP);
         if (teleportTarget != null) {
-            serverPlayerEntity.teleportTo(teleportTarget);
-
-            // "You have no home bed or charged respawn anchor, or it was obstructed"
-            if (teleportTarget.missingRespawnBlock()) {
-                serverPlayerEntity.networkHandler.sendPacket(
-                        new GameStateChangeS2CPacket(
-                                GameStateChangeS2CPacket.NO_RESPAWN_BLOCK,
-                                0.0F
-                        )
-                );
-            }
-
             serverPlayerEntity.setHealth(serverPlayerEntity.getMaxHealth());
             serverPlayerEntity.getHungerManager().setFoodLevel(20);
             serverPlayerEntity.getHungerManager().setSaturationLevel(5.0f);
@@ -124,6 +112,7 @@ public class ScoreboardDuelComponent implements DuelComponent, ServerTickingComp
             ((ServerPlayerEntityAccessor) serverPlayerEntity).setJoinInvulnerabilityTicks(60);
             // Possibilmente aggiungere un effetto che impedisce di essere sfidati per 5 minuti
         }
+        else LOGGER.error("Player {}'s respawnTarget is null. Report this to the mod author", player);
     }
 
     public boolean isInLooting(UUID player) {
