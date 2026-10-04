@@ -1,24 +1,24 @@
-# PvP Gauntlets
-
 Adds a duel system to make PvP more fair and less impactful. Especially great for modpacks with hard to get equipment!
 <br></br>
 This mod aims to solve a bunch of issues regarding Minecraft PvP:
 <ul>
     <li>Losing a fight means losing ALL your items, which can be devastating on modpacks where endgame equipment can take hundreds of hours to get</li>
   <li>When no movement options such as elytra are available ambushes become pretty much impossible to escape from, especially when a single blow can take off half your hp</li>
-  <li>When movement options such as alytra are available it becomes really hard to close out a fight if the opponents wants to flee</li>
+  <li>When movement options such as elytra are available it becomes really hard to close out a fight if the opponents wants to flee</li>
 </ul>
 What these problems end up causing is that friends in a private server will never take on PvP to not ruin the experience for everybody.
 <hr>
 <h3>Features</h3>
 Adds a complete duel system that requires one to hit a player with a gauntlet to initiate a duel. While not in a duel PvP damage will be reduced by a configurable amount (80% by default).
 <br></br>
-(All the following numbers are configurable)
+(All the following numbers are configurable) <br>
 Once one of the players is defeated the looting phase will start:
-1. The winning player will choose 1 item to steal from the losing player
-2. The loser will then choose 5 items (aside from the already stolen item) to protect
-3. The winner will  choose 4 non-protected items to steal
-4. The loser will respawn with the rest of his items. XP will still be dropped
+<ol>
+  <li>The winning player will choose 1 item to steal from the losing player</li>
+  <li>The loser will then choose 5 items (aside from the already stolen item) to protect</li>
+  <li>The winner will  choose 4 non-protected items to steal</li>
+  <li>The loser will respawn with the rest of his items. XP will be dropped as normal</li>
+</ol>
 <hr>
 <h3>Gauntlets</h3>
 <ul>
@@ -33,8 +33,8 @@ Most values are configurable through game rules. You can easily get a list of ga
 <br></br>
 The config file allows to change the following:
 <ul>
-  <li>Which items are disabled by No-Fly</li>
-  <li></li>
+  <li>Which items are disabled during duels</li>
+  <li>Which items are disabled by the No-Fly Gauntlet</li>
 </ul>
 <hr>
 <h3>Additional features</h3>
@@ -47,8 +47,4 @@ The config file allows to change the following:
 </ul>
 <hr>
 <h3>Suggested mods</h3>
-It is recommended to play this mod along with the following:
-<ul>
-  <li><b><a href="https://modrinth.com/mod/yigd" target="_blank">You're in Grave Danger</a></b><br>Protects your items from being stolen when you die outside of a duel. Look at graveRobbing inside of YIGD's configs</li>
-  <li></li>
-</ul>
+It is recommended to play this mod along with <a href="https://modrinth.com/mod/yigd" target="_blank">You're in Grave Danger</a> or another mod that adds graves/corpses. YIGD is especially good because it protects your items from being stolen when you die outside of a duel. Check out graveRobbing inside of YIGD's configs.
